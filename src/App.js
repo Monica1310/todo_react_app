@@ -144,7 +144,7 @@ export default function App() {
 									fontWeight: 600,
 									color:'teal'
 								})}>
-								Project xyz
+								Project:
 							</Title>
 							{/* <ActionIcon
 								color={'blue'}
