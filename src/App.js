@@ -11,31 +11,18 @@ import {
 	Code,
 } from '@mantine/core';
 import { useState, useRef, useEffect } from 'react';
-import { MoonStars, Sun, Trash } from 'tabler-icons-react';
+import {Trash } from 'tabler-icons-react';
 
-import {
-	MantineProvider,
-	ColorSchemeProvider,
-	ColorScheme,
-} from '@mantine/core';
-// import { useColorScheme } from '@mantine/hooks';
-// import { useHotkeys, useLocalStorage } from '@mantine/hooks';
+import {MantineProvider} from '@mantine/core';
+
 
 export default function App() {
 	const [tasks, setTasks] = useState([]);
 	const [opened, setOpened] = useState(false);
-
-
-	// const preferredColorScheme = useColorScheme();
-	// const [colorScheme, setColorScheme] = useLocalStorage({
-	// 	key: 'mantine-color-scheme',
-	// 	defaultValue: 'light',
-	// 	getInitialValueInEffect: true,
-	// });
-	// const toggleColorScheme = value =>
-	// 	setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-
-	// useHotkeys([['mod+J', () => toggleColorScheme()]]);
+	const [text,setText] = useState("")
+	const [sub,setSub] = useState()
+	const [titles,setTitles] = useState()
+	const [state,setState] = useState(false)
 
 	const taskTitle = useRef('');
 	const taskSummary = useRef('');
@@ -86,12 +73,31 @@ export default function App() {
 		loadTasks();
 	}, []);
 
+	const handleChange = (e) => {
+
+		setText(e.target.value)
+		
+
+	}
+
+	const handleSub = (e) => {
+	
+		setSub(text)
+		setState(true)
+
+	}
+	console.log(sub,"sub")
+	console.log(state)
+	
+
+	// const title = localStorage.getItem("title")
+	// console.log(title)
+
 	return (
-		<div style={{width:'500px',margin:'auto',boxSizing:'border-box',padding:"10px",boxShadow:"rgba(149, 157, 165, 0.2) 0px 8px 24px"}}>
-		{/* <ColorSchemeProvider
-			colorScheme={colorScheme}
-			toggleColorScheme={toggleColorScheme}
-			> */}
+		<div style={{width:'500px',margin:'auto',boxSizing:'border-box'
+		,padding:"10px",boxShadow:"rgba(149, 157, 165, 0.2) 0px 8px 24px",
+		backgroundColor:'teal'}}>
+		
 			<MantineProvider
 				theme={{ defaultRadius: 'md' }}
 				withGlobalStyles
@@ -132,29 +138,40 @@ export default function App() {
 									createTask();
 									setOpened(false);
 								}}>
-								Create Task
+								Create 
 							</Button>
 						</Group>
 					</Modal>
 					<Container size={550} my={40}>
-						<Group position={'apart'}>
-							<Title
-								sx={theme => ({
-									fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-									fontWeight: 600,
-									color:'teal'
-								})}>
-								Project:
-							</Title>
-							{/* <ActionIcon
-								color={'blue'}
-								onClick={() => toggleColorScheme()}
-								size='lg'>
-								
-									<Sun size={16} />
-								
-							</ActionIcon> */}
-						</Group>
+						{state === false ? (
+							<>
+							<input style={{ height:"40px",borderRadius:'35px',width:'280px',
+							border:'1px solid white',
+							boxSizing:"border-box" ,padding:'10px'}} 
+							onChange={handleChange} placeholder='Enter Project Title Here'/>
+							<button 
+							style={{color:'teal',backgroundColor:"white",marginLeft:'50px',
+							border:'1px solid white',borderRadius:'25px',width:"100px",height:'40px'}} 
+							onClick={handleSub}>Add
+							</button>	
+							</>
+								):(
+									<>
+
+									<Group position={'apart'}>
+									<Title
+									sx={theme => ({
+										fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+										fontWeight: 400,
+										color:'white'
+									})}>
+									Project : {sub}
+								</Title>		
+							</Group>
+							</>
+								)}
+					
+
 						{tasks.length > 0 ? (
 							tasks.map((task, index) => {
 								if (task.title) {
@@ -162,42 +179,60 @@ export default function App() {
 										<Card withBorder key={index} mt={'sm'}>
 											<Group position={'apart'}>
 												<Text weight={'bold'}>{task.title}</Text>
+												<div style={{marginRight:'6px'}}>
 												<ActionIcon
 													onClick={() => {
 														deleteTask(index);
 													}}
 													color={'red'}
-													variant={'transparent'}>
+													variant={'transparent'}
+													
+													>
+												    
 													<Trash />
 												</ActionIcon>
+
+												</div>
+												
 											</Group>
-											<Text color={'dimmed'} size={'md'} mt={'sm'}>
-												{task.summary
-													? task.summary
-													: 'No task is assigned'}
-											</Text>
+
+											<div style={{display:'flex',justifyContent:"space-between"}}>
+												
+												<div>
+													<Text color={'dimmed'} size={'md'} mt={'sm'}>
+													{task.summary
+														? task.summary
+														: 'No task is assigned'}
+													</Text>
+												</div>
+												<div>
+												  <input style={{width:"40px",height:'20px',marginTop:'10px'}} type="checkbox" />
+												</div>
+											
+											</div>
 										</Card>
 									);
 								}
 							})
 						) : (
 							
-							<Text size={'lg'} mt={'md'} color={'teal'}>
-								A goal without a plan is just a wish
+							<Text size={'lg'} mt={'md'} color={'black'}>
+								"A goal without a plan is just a wish !"
 							</Text>
 						)}
-						<Button style={{color:'white',backgroundColor:'teal'}}
+						<Button style={{color:'teal',
+						backgroundColor:'white',borderRadius:'25px',height:'40px'}}
 							onClick={() => {
 								setOpened(true);
 							}}
 							fullWidth
 							mt={'md'}>
-							Task Allocation
+							Start Planning
 						</Button>
 					</Container>
 				</div>
 			</MantineProvider>
-		{/* </ColorSchemeProvider> */}
+		
 		</div>
 	);
 }
